@@ -1,4 +1,5 @@
-
+from PrivateNetwork import PrivateNetwork
+from pprint import pprint
 
 def testAddSingleKey():
     test = PrivateNetwork()
@@ -6,7 +7,6 @@ def testAddSingleKey():
     devices = test.get_devices()
     network = test.get_networks()
     count = test.get_network_count()
-    test.print_networks()
 
     # test network count
     assert count == 2, "Network count should be at 2 after adding one connection"
@@ -24,6 +24,7 @@ def testAddTwoKeys():
     devices = test.get_devices()
     network = test.get_networks()
     count = test.get_network_count()
+    pprint(network.values())
 
     # test count
     assert count == 3, "Count should be at 3 after adding 2 networks"
@@ -32,8 +33,8 @@ def testAddTwoKeys():
     
     # test networks
     assert "1" in network and "2" in network, "Network should have 1 and 2"
-    assert ("Alice", "Bob") in network.values() or ("Bob", "Alice") in network.values(), "Alice and Bob should be a pair in network"
-    assert ("Alice", "Carlos") in network.values() or ("Carlos", "Alice") in network.values(), "Alice and Carlos should be a pair in network"
+    assert ["Alice", "Bob"] in network.values() or ["Bob", "Alice"] in network.values(), "Alice and Bob should be a pair in network"
+    assert ["Alice", "Carlos"] in network.values() or ["Carlos", "Alice"] in network.values(), "Alice and Carlos should be a pair in network"
     
 def testAddMultipleKeys():
     test = PrivateNetwork()
@@ -53,7 +54,7 @@ def testAddMultipleKeys():
     assert "Bob" in devices, "Bob should be in the devices list."
     assert "Carlos" in devices, "Carlos should be in the devices list."
     assert "David" in devices, "David should be in the devices list."
-
+    pprint(devices)
     # test network list
     for i in range(0, 4):
         assert str(i+1) in network
