@@ -16,6 +16,11 @@ class PrivateNetwork:
         # Arg check
         if devices is None or len(devices) < 2:
             return
+        
+        # if connection already exists, dont add
+        if self._connection_exists(devices):
+            return
+        
         # add network id to device
         for device in devices:
             if devices in self.devices:
@@ -23,7 +28,7 @@ class PrivateNetwork:
             else:
                 self.devices[device] = [self.network_count]
         
-        self.networks[str(self.network_count)] = list(devices)
+        self.networks[str(self.network_count)] = devices
         self.network_count += 1
 
     def get_devices(self) -> dict:
@@ -33,3 +38,30 @@ class PrivateNetwork:
         return self.networks
     def get_network_count(self) -> int:
         return self.network_count
+    
+    def _connection_exists(self, new_connection: tuple) -> bool:
+        """
+        Checks if a connection for a given pair already exists.
+        
+        param:
+            - new_connection: Tuple of device names.
+        return: 
+            - True if the connection already exists, otherwise False.
+        """
+        for connection in self.networks.values():
+            if self._connections_equal(connection, new_connection):
+                return True
+        return False
+
+    @staticmethod
+    def _connections_equal(existing: tuple, new: tuple) -> bool:
+        """
+        Compares two device tuples regardless of order.
+        
+        param 
+            - existing: An existing network connection.
+            - new: A new network connection.
+        return: 
+            - True if they contain the same devices, False otherwise.
+        """
+        return sorted(existing) == sorted(new)

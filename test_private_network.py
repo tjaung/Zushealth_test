@@ -15,7 +15,7 @@ def testAddSingleKey():
     assert "Bob" in devices, "Bob should be in devices list"
     # test network
     assert "1" in network, "Network should contain one key, val pair of '1': ('Alice', 'Bob')"
-    assert network["1"] == ["Alice", "Bob"], "Network should contain one key, val pair of '1': ('Alice', 'Bob')"
+    assert network["1"] == ("Alice", "Bob"), "Network should contain one key, val pair of '1': ('Alice', 'Bob')"
 
 def testAddTwoKeys():
     test = PrivateNetwork()
@@ -33,8 +33,8 @@ def testAddTwoKeys():
     
     # test networks
     assert "1" in network and "2" in network, "Network should have 1 and 2"
-    assert ["Alice", "Bob"] in network.values() or ["Bob", "Alice"] in network.values(), "Alice and Bob should be a pair in network"
-    assert ["Alice", "Carlos"] in network.values() or ["Carlos", "Alice"] in network.values(), "Alice and Carlos should be a pair in network"
+    assert ("Alice", "Bob") in network.values() or ("Bob", "Alice") in network.values(), "Alice and Bob should be a pair in network"
+    assert ("Alice", "Carlos") in network.values() or ("Carlos", "Alice") in network.values(), "Alice and Carlos should be a pair in network"
     
 def testAddMultipleKeys():
     test = PrivateNetwork()
