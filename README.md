@@ -7,6 +7,7 @@
 A small project for the Zus Health test.
 
 Just a small Python class and FastAPI script with a simple React page
+![alt text](https://github.com/tjaung/Zushealth_test/blob/main/preview.png?raw=true)
 
 # Installation
 
