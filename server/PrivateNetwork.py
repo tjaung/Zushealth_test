@@ -118,14 +118,18 @@ class PrivateNetwork:
         Prints out all networks with each device. Each device prints its slot
         that contains the network ID.
         """
+        out = ""
         for network_id, connection in self.networks.items():
             print(f"Network {network_id},key {network_id}:")
+            out += f"Network {network_id},key {network_id}:"
             for device in connection:
                 device_keys = self.get_device_keys(device)
                 # slots should print at ind 1 start (slot 1 is index 0)
                 slot = device_keys.index(int(network_id)) + 1
                 print(f"\t{device} - put key {network_id} in slot {slot}")
-
+                out += f"\t{device} - put key {network_id} in slot {slot}"
+        return out
+    
     def _update_device_keys(self, device: str, network_id: int) -> None:
         '''
         Updates the keys for a single device with the network_id.
