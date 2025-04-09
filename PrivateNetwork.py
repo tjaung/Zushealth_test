@@ -16,8 +16,13 @@ class PrivateNetwork:
     def add_key(self, devices: tuple) -> None:
         # Arg check
         if devices is None or len(devices) < 2:
-            return
-        
+            print("Error: device(s) missing")
+            return 
+        for device in devices:
+            if device.strip() == "":
+                print("Error: Device name is empty")
+                return
+            
         # Do base case checks:
         # if any device already has 4 keys and no None, do not add
         if self._any_device_at_max(devices):
@@ -35,20 +40,9 @@ class PrivateNetwork:
             self.network_count += 1
         # update each devices key list
         for device in devices:
-            if device in self.devices:
-                if len(self.devices[device]) < 4:
-                    self.devices[device].append(network_id)
-                else:
-                    # find the first available None slot and fill it
-                    for i, key in enumerate(self.devices[device]):
-                        if key is None:
-                            self.devices[device][i] = network_id
-                            break
-            else:
-                # init new device with its list as current network_id
-                self.devices[device] = [network_id]
-
-        # save new network connection
+            self._update_device_keys(device, network_id)
+        
+        # Record the connection in the networks mapping.
         self.networks[str(network_id)] = devices
 
     def remove_key(self, network: int) -> None:
@@ -62,10 +56,12 @@ class PrivateNetwork:
         """
         network_key = str(network)
         if network_key not in self.networks:
+            print("Error: Network key not found")
             return
         
         devices_in_network = self.networks.pop(network_key)
         if not devices_in_network:
+            print("Error: No devices found for this network key")
             return
 
         for device in devices_in_network:
@@ -130,7 +126,31 @@ class PrivateNetwork:
                 slot = device_keys.index(int(network_id)) + 1
                 print(f"\t{device} - put key {network_id} in slot {slot}")
 
-    
+    def _update_device_keys(self, device: str, network_id: int) -> None:
+        '''
+        Updates the keys for a single device with the network_id.
+        If device exists and has a slot either not full or a None value, then
+        the network_id is appended. If the device does not exist, it is initialized 
+        with the new key.
+
+        param:
+            - device: Device name.
+            - network_id: The network ID to add.
+        '''
+        if device in self.devices:
+            keys = self.devices[device]
+            if len(keys) < 4:
+                keys.append(network_id)
+            else: # add None slots
+                # Find the first available slot (marked by None) and fill it.
+                for i, key in enumerate(keys):
+                    if key is None:
+                        keys[i] = network_id
+                        break
+        else:
+            # New device: initialize its key list with the network_id.
+            self.devices[device] = [network_id]
+
     def _connection_exists(self, new_connection: tuple) -> bool:
         """
         Checks if a connection for a given pair already exists.
@@ -176,6 +196,7 @@ class PrivateNetwork:
                     continue
                 # if no slot is None, its full
                 if None not in keys:
+                    print(f"Error: {device}'s device is out of keys")
                     return True
         return False
 

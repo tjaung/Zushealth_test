@@ -126,3 +126,34 @@ def testAddRemoveRemoveAddBack():
     
     assert "Carlos" in devices, "Carlos must still be in devices"
     assert 2 in devices["Carlos"], "Carlos must have 2 in his key array"
+
+def testBadInputs():
+    test = PrivateNetwork()
+    test.add_key(("Alice", ""))
+    devices = test.get_devices()
+    network = test.get_networks()
+    # pprint(network)
+    # pprint(devices)
+    assert len(network) == 0, "Network should be empty"
+    assert len(devices) == 0, "Devices should be empty"
+
+    test.add_key(("Alice", ))
+    devices = test.get_devices()
+    network = test.get_networks()
+    # pprint(network)
+    # pprint(devices)
+    assert len(network) == 0, "Network should be empty"
+    assert len(devices) == 0, "Devices should be empty"
+
+    test.add_key(())
+    devices = test.get_devices()
+    network = test.get_networks()
+    # pprint(network)
+    # pprint(devices)
+    assert len(network) == 0, "Network should be empty"
+    assert len(devices) == 0, "Devices should be empty"
+
+def testRemoveEmptyNetwork():
+    test = PrivateNetwork()
+    test.remove_key(1)
+    assert len(test.free_networks) == 0, "Removing from empty network dict should not update recycled network list"

@@ -7,7 +7,7 @@ def main():
     test.add_key(("Alice", "David")) # 3
     test.add_key(("Alice", "Bob", "Carlos", "David")) # 4
     test.add_key(("Bob", "Carlos", "David")) # 5
-    test.add_key(("Bob", "Alice")) # 6
+    test.add_key(("Bob", "Alice")) # 6 should print an error
     test.print_networks()
 
 if __name__ == "__main__":
