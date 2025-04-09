@@ -68,3 +68,61 @@ def testAddMultipleKeys():
     assert 6 not in devices["Alice"] and 6 not in devices["Bob"], "Alice -> Bob must only have one unique pair."
     # Check that count is as expected, e.g., 1
     assert count == 6, "Network count should be 6 after adding up to last connection and failing to add last."
+
+def testAddRemove():
+    test = PrivateNetwork()
+    test.add_key(("Alice", "Bob"))
+    test.add_key(("Alice", "Carlos"))
+    test.add_key(("Alice", "David"))
+    test.remove_key(2)
+
+    devices = test.get_devices()
+    network = test.get_networks()
+    count = test.get_network_count()
+
+    assert ("Alice", "Bob") in network.values() or ("Bob", "Alice") in network.values(), "Network must include connection between Alice and Bob."
+    assert ("Alice", "David") in network.values() or ("David", "Alice") in network.values(), "Network must include connection between Alice and David."
+    assert ("Alice", "Carlos") not in network.values() or ("Carlos", "Alice") not in network.values(), "Network must NOT include connection between Alice and Carlos."
+    
+    assert "Carlos" in devices, "Carlos must still be in devices"
+    assert 2 not in devices["Carlos"], "Carlos must not have 2 in his key array"
+
+def testAddRemoveAddBack():
+    test = PrivateNetwork()
+    test.add_key(("Alice", "Bob"))
+    test.add_key(("Alice", "Carlos"))
+    test.add_key(("Alice", "David"))
+    test.remove_key(2)
+    test.add_key(("Alice", "Carlos"))
+
+    devices = test.get_devices()
+    network = test.get_networks()
+    count = test.get_network_count()
+
+    assert ("Alice", "Bob") in network.values() or ("Bob", "Alice") in network.values(), "Network must include connection between Alice and Bob."
+    assert ("Alice", "David") in network.values() or ("David", "Alice") in network.values(), "Network must include connection between Alice and David."
+    assert ("Alice", "Carlos") in network.values() or ("Carlos", "Alice") in network.values(), "Network must include connection between Alice and Carlos."
+    
+    assert "Carlos" in devices, "Carlos must still be in devices"
+    assert 2 in devices["Carlos"], "Carlos must have 2 in his key array"
+
+def testAddRemoveRemoveAddBack():
+    test = PrivateNetwork()
+    test.add_key(("Alice", "Bob"))
+    test.add_key(("Alice", "Carlos"))
+    test.add_key(("Alice", "David"))
+    test.add_key(("Alice", "Bob", "Carlos", "David"))
+    test.remove_key(3)
+    test.remove_key(2)
+    test.add_key(("Alice", "Carlos"))
+
+    devices = test.get_devices()
+    network = test.get_networks()
+    count = test.get_network_count()
+    pprint(devices)
+    assert ("Alice", "Bob") in network.values() or ("Bob", "Alice") in network.values(), "Network must include connection between Alice and Bob."
+    assert ("Alice", "David") not in network.values() or ("David", "Alice") not in network.values(), "Network must include connection between Alice and David."
+    assert ("Alice", "Carlos") in network.values() or ("Carlos", "Alice") in network.values(), "Network must include connection between Alice and Carlos."
+    
+    assert "Carlos" in devices, "Carlos must still be in devices"
+    assert 2 in devices["Carlos"], "Carlos must have 2 in his key array"

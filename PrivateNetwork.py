@@ -11,28 +11,73 @@ class PrivateNetwork:
         self.networks = {} # {"1": ["Alice", "Bob"]}
         self.devices = {} # {"Alice": [1,None,3,4]}
         self.network_count = 1 # next networkId if no recycled ids
+        self.free_networks = [] # list of recylced network ids
         
     def add_key(self, devices: tuple) -> None:
         # Arg check
         if devices is None or len(devices) < 2:
             return
         
+        # Do base case checks:
+        # if any device already has 4 keys and no None, do not add
+        if self._any_device_at_max(devices):
+            return
+
         # if connection already exists, dont add
         if self._connection_exists(devices):
             return
         
-        # add network id to device
+        # extract either next network id or a recycled one
+        if self.free_networks:
+            network_id = self.free_networks.pop() # pop last element for O(1) time
+        else:
+            network_id = self.network_count
+            self.network_count += 1
+        # update each devices key list
         for device in devices:
             if device in self.devices:
                 if len(self.devices[device]) < 4:
-                    self.devices[device].append(self.network_count)
+                    self.devices[device].append(network_id)
                 else:
-                    continue
+                    # find the first available None slot and fill it
+                    for i, key in enumerate(self.devices[device]):
+                        if key is None:
+                            self.devices[device][i] = network_id
+                            break
             else:
-                self.devices[device] = [self.network_count]
+                # init new device with its list as current network_id
+                self.devices[device] = [network_id]
+
+        # save new network connection
+        self.networks[str(network_id)] = devices
+
+    def remove_key(self, network: int) -> None:
+        """
+        Removes network connection with the given network ID.
+        For each device in connection, sets the matching key entry to None.
+        The removed network ID is added to the free_networks list for reuse.
         
-        self.networks[str(self.network_count)] = devices
-        self.network_count += 1
+        param:
+            - network: network ID to remove
+        """
+        network_key = str(network)
+        if network_key not in self.networks:
+            return
+        
+        devices_in_network = self.networks.pop(network_key)
+        if not devices_in_network:
+            return
+
+        for device in devices_in_network:
+            if device in self.devices:
+                try:
+                    index = self.devices[device].index(network)
+                    self.devices[device][index] = None
+                except ValueError:
+                    # network was not recorded for this device
+                    pass
+        
+        self.free_networks.append(network)
 
     def get_device_keys(self, device: str):
         """
@@ -112,3 +157,38 @@ class PrivateNetwork:
             - True if they contain the same devices, False otherwise.
         """
         return sorted(existing) == sorted(new)
+    
+    def _any_device_at_max(self, devices: tuple) -> bool:
+        """
+        Returns True if any device in the devices tuple already has 4 keys 
+        with no available (None) slot.
+        
+        param 
+            - devices: Tuple of device names.
+        return: 
+            - True if at least one device cannot accept a new network key.
+        """
+        for device in devices:
+            if device in self.devices:
+                keys = self.devices[device]
+                # if theres room, then not maxed
+                if len(keys) < 4:
+                    continue
+                # if no slot is None, its full
+                if None not in keys:
+                    return True
+        return False
+
+    def is_max_keys(self, device: str) -> bool:
+        """
+        Returns true if the device has 4 keys with no None slot.
+        
+        param:
+            - device: Device name.
+        return: 
+            - True if device is at maximum capacity.
+        """
+        if device not in self.devices:
+            return False
+        keys = self.devices[device]
+        return len(keys) >= 4 and None not in keys
