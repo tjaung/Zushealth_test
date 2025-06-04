@@ -55,10 +55,12 @@ slots and are numbered, starting from 1.
 communicate simultaneously. A network must have exactly 1 symmetric key, so that all
 people can decrypt whatever is sent to the network.
 - A key (aka symmetric key) should be on only 1 network.
+
 Given a set of networks and unique names of people, your code should report the list keys to be
 set up, and give instructions on how to set up each device. It should also eliminate any
 duplicates, in case the network plan is redundant.
 Example:
+
 - Assume we’ve got 4 people in this example - Alice, Bob, Carlos, and David.
 - Alice and Bob need to have a private channel between the two of them
 - Alice and Carlos need to have a private channel between the two of them
@@ -67,25 +69,26 @@ Example:
 and David
 - Bob, Carlos and David must have a network that excludes Alice.
 - Bob, Alice need to have a private channel between the two of them
+
 For this situation, the output should be:
 
-- Network 1, key 1 -
+Network 1, key 1
 - Alice - put key 1 in slot 1
 - Bob - put key 1 in slot 1
-- Network 2, key 2 -
+Network 2, key 2 -
 - Alice - put key 2 in slot 2
 - Carlos - put key 2 in slot 1 (any slot, it doesn’t matter, as long as there is no
 repeat)
-- Network 3, key 3 -
+Network 3, key 3
 - Alice - put key 3 in slot 3
 - David - put key 3 in slot 1 (any slot, it doesn’t matter, as long as there is no
 repeat)
-- Network 4, key 4 -
+Network 4, key 4
 - Alice - put key 4 in slot 4
 - Bob - put key 4 in slot 2
 - Carlos - put key 4 in slot 2
 - David - put key 4 in slot 2
-- Network 5, key 5 -
+Network 5, key 5
 - Bob - put key 5 in slot 3
 - Carlos - put key 5 in slot 3
 - David - put key 5 in slot 3
