@@ -72,23 +72,27 @@ and David
 
 For this situation, the output should be:
 
-Network 1, key 1
+Network 1, key 1  
 - Alice - put key 1 in slot 1
 - Bob - put key 1 in slot 1
-Network 2, key 2 -
+
+Network 2, key 2  
 - Alice - put key 2 in slot 2
 - Carlos - put key 2 in slot 1 (any slot, it doesn’t matter, as long as there is no
 repeat)
-Network 3, key 3
+
+Network 3, key 3  
 - Alice - put key 3 in slot 3
 - David - put key 3 in slot 1 (any slot, it doesn’t matter, as long as there is no
 repeat)
-Network 4, key 4
+
+Network 4, key 4  
 - Alice - put key 4 in slot 4
 - Bob - put key 4 in slot 2
 - Carlos - put key 4 in slot 2
 - David - put key 4 in slot 2
-Network 5, key 5
+  
+Network 5, key 5  
 - Bob - put key 5 in slot 3
 - Carlos - put key 5 in slot 3
 - David - put key 5 in slot 3
